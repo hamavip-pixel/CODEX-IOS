@@ -1,24 +1,60 @@
-name: HAMACODEX
-options:
-  bundleIdPrefix: com.hama
-  deploymentTarget:
-    iOS: "16.0"
-settings:
-  base:
-    SWIFT_VERSION: "5.9"
-    PRODUCT_BUNDLE_IDENTIFIER: com.hama.codex
-    INFOPLIST_KEY_CFBundleDisplayName: HAMA CODEX
-    TARGETED_DEVICE_FAMILY: "2"
-    SUPPORTS_MACCATALYST: NO
-targets:
-  HAMACODEX:
-    type: application
-    platform: iOS
-    sources:
-      - HamaCodex
-    settings:
-      base:
-        PRODUCT_NAME: HAMA CODEX
-        GENERATE_INFOPLIST_FILE: YES
-        INFOPLIST_KEY_UILaunchScreen_Generation: YES
-        CODE_SIGN_STYLE: Automatic
+
+name: HAMA CODEX Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build HAMA CODEX IPA
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode.app
+          xcodebuild -version
+
+      - name: Install XcodeGen
+        run: |
+          brew install xcodegen
+
+      - name: Generate Xcode Project
+        run: |
+          xcodegen generate --spec app-project.yml
+
+      - name: Build iOS App
+        run: |
+          xcodebuild \
+            -project HAMACODEX.xcodeproj \
+            -scheme HAMACODEX \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Package IPA
+        run: |
+          APP_PATH=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" -print -quit)
+
+          if [ -z "$APP_PATH" ]; then
+            echo "ERROR: App not found"
+            exit 1
+          fi
+
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/
+          zip -r HAMA-CODEX.ipa Payload
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: HAMA-CODEX-IPA
+          path: HAMA-CODEX.ipa
