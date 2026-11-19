@@ -1,0 +1,9 @@
+# Exported symbols for HAMACODEX.xcframework
+# One linker-level name per line. C names get a leading underscore;
+# * and ? wildcards are allowed (handy for mangled C++ names).
+__ZN9HAMACODEX*
+__ZTVN9HAMACODEX*
+__ZTIN9HAMACODEX*
+__ZTSN9HAMACODEX*
+_HAMACODEX_add
+_HAMACODEX_version
