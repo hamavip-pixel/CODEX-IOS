@@ -26,11 +26,33 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView {
-            List(selection: $selection) {
+            List {
                 Section("WORKSPACE") {
                     ForEach(sidebar, id: \.self) { item in
-                        Label(item, systemImage: icon(for: item))
-                            .tag(item)
+                        Button {
+                            selection = item
+                        } label: {
+                            HStack {
+                                Label(
+                                    item,
+                                    systemImage: icon(for: item)
+                                )
+
+                                Spacer()
+
+                                if selection == item {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(.red)
+                                }
+                            }
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .listRowBackground(
+                            selection == item
+                                ? Color.red.opacity(0.12)
+                                : Color.clear
+                        )
                     }
                 }
             }
