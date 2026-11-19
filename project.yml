@@ -1,0 +1,24 @@
+name: HAMACODEX
+options:
+  bundleIdPrefix: com.hama
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    PRODUCT_BUNDLE_IDENTIFIER: com.hama.codex
+    INFOPLIST_KEY_CFBundleDisplayName: HAMA CODEX
+    TARGETED_DEVICE_FAMILY: "2"
+    SUPPORTS_MACCATALYST: NO
+targets:
+  HAMACODEX:
+    type: application
+    platform: iOS
+    sources:
+      - HamaCodex
+    settings:
+      base:
+        PRODUCT_NAME: HAMA CODEX
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        CODE_SIGN_STYLE: Automatic
