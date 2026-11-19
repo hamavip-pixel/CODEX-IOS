@@ -1,0 +1,6 @@
+framework module HAMACODEX {
+    umbrella header "HAMACODEX.h"
+
+    export *
+    module * { export * }
+}
